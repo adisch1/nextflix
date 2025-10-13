@@ -38,7 +38,7 @@ pipeline {
         stage('Deploy to Staging') {
             when { branch 'main' }
             steps {
-                sshagent(['ec2_ssh']) {
+                sshagent(['ec2-ssh-key']) {
                     sh """
                     ssh -o StrictHostKeyChecking=no ubuntu@$STAGING_IP \
                     'docker pull $ECR_URL/$IMAGE_NAME:latest && \
@@ -55,7 +55,7 @@ pipeline {
                 expression { return env.CHANGE_ID == null } // runs only on PR merge
             }
             steps {
-                sshagent(['ec2_ssh']) {
+                sshagent(['ec2-ssh-key']) {
                     sh """
                     ssh -o StrictHostKeyChecking=no ubuntu@$PROD_IP \
                     'docker pull $ECR_URL/$IMAGE_NAME:latest && \
