@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        EC2_CREDENTIALS = credentials('ec2_ssh')
+        EC2_CREDENTIALS = credentials('ec2-ssh-key')
         IMAGE_NAME = "nextflix"
         AWS_REGION = "eu-central-1b" 
         ECR_URL = "047719655761.dkr.ecr.eu-central-1.amazonaws.com/devops/nextflix"
