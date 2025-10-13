@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        AWS_CREDENTIALS = credentials('aws_ecr_credentials')
         EC2_CREDENTIALS = credentials('ec2_ssh')
         IMAGE_NAME = "nextflix"
         AWS_REGION = "eu-central-1b" 
@@ -30,7 +29,7 @@ pipeline {
         stage('Push to ECR') {
             steps {
                 sh """
-                aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_URL
+                aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin adisch1.dkr.ecr.$AWS_REGION.amazonaws.com
                 docker push $ECR_URL/$IMAGE_NAME:latest
                 """
             }
