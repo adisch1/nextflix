@@ -6,6 +6,7 @@ pipeline {
         IMAGE_NAME = "nextflix"
         AWS_REGION = "eu-central-1" 
         ECR_URL = "047719655761.dkr.ecr.eu-central-1.amazonaws.com/devops/nextflix"
+        ECR_SURL = "047719655761.dkr.ecr.eu-central-1.amazonaws.com"
         STAGING_IP = "52.59.231.94"
         PROD_IP = "54.93.247.225"
     }
@@ -29,7 +30,7 @@ pipeline {
         stage('Push to ECR') {
             steps {
                 sh """
-                aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin "047719655761.dkr.ecr.$AWS_REGION.amazonaws.com"
+                aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_SURL
                 docker push $ECR_URL/$IMAGE_NAME:latest
                 """
             }
