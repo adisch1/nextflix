@@ -6,8 +6,8 @@ pipeline {
         IMAGE_NAME = "nextflix"
         AWS_REGION = "eu-central-1b" 
         ECR_URL = "047719655761.dkr.ecr.eu-central-1.amazonaws.com/devops/nextflix"
-        STAGING_IP = "3.71.9.81"
-        PROD_IP = "63.178.228.231"
+        STAGING_IP = "52.59.231.94"
+        PROD_IP = "54.93.247.225"
     }
 
     stages {
