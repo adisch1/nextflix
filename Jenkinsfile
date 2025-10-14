@@ -41,8 +41,8 @@ pipeline {
             steps {
                 sshagent(['ec2-ssh-key']) {
                     sh """
-                    ssh -o StrictHostKeyChecking=no ubuntu@$STAGING_IP \
                     aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_SURL
+                    ssh -o StrictHostKeyChecking=no ubuntu@$STAGING_IP \
                     'docker pull $ECR_URL/$IMAGE_NAME:latest && \
                      docker stop nextflix || true && \
                      docker rm nextflix || true && \
