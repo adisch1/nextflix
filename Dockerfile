@@ -1,14 +1,23 @@
-# Stage 1: build
-FROM node:20-alpine AS builder
+# Use Node.js Alpine base image
+FROM node:20-alpine
+
+# Set working directory
 WORKDIR /app
+
+# Copy package.json and package-lock.json
 COPY package*.json ./
-RUN npm ci
+
+# Install dependencies (production only)
+RUN npm install --omit=dev
+
+# Copy the rest of the app
 COPY . .
+
+# Build the Next.js app
 RUN npm run build
 
-# Stage 2: runtime
-FROM node:20-alpine
-WORKDIR /app
-COPY --from=builder /app ./
+# Expose the port Next.js runs on
 EXPOSE 3000
+
+# Start the app
 CMD ["npm", "start"]
