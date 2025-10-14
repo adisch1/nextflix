@@ -1,17 +1,14 @@
-FROM node:20-alpine
-
+# Stage 1: build
+FROM node:20-alpine AS builder
 WORKDIR /app
-
-# Only copy package files first (caching layer)
 COPY package*.json ./
-
-RUN npm install --production
-
-# Copy the rest of the app
+RUN npm ci
 COPY . .
+RUN npm run build
 
-# Expose port
+# Stage 2: runtime
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=builder /app ./
 EXPOSE 3000
-
-# Start the app
 CMD ["npm", "start"]
