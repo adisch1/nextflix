@@ -1,26 +1,23 @@
-# Use official Node Alpine image
+# Use official Node image
 FROM node:18.0.0-alpine
 
 # Set working directory
 WORKDIR /usr/src/app
 
-# Copy only package files first (for caching)
-COPY package.json package-lock.json ./
+# Copy only package.json
+COPY package.json ./
 
 # Install dependencies
-RUN npm ci --legacy-peer-deps
+RUN npm install --legacy-peer-deps
 
-# Copy the rest of the app
+# Copy the rest of the application
 COPY . .
 
-# Set Node options for legacy OpenSSL
-ENV NODE_OPTIONS=--openssl-legacy-provider
+# Accept TMDB API key as build argument and set environment variable
+ARG TMDB_API_KEY
+ENV TMDB_KEY=$TMDB_API_KEY
 
-# API key from build argument
-ARG API_KEY
-ENV TMDB_KEY=${API_KEY}
-
-# Build the app
+# Build the Next.js app
 RUN npm run build
 
 # Expose port
