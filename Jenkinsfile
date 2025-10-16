@@ -7,8 +7,8 @@ pipeline {
         AWS_REGION = "eu-central-1" 
         ECR_URL = "047719655761.dkr.ecr.eu-central-1.amazonaws.com/devops"
         ECR_SURL = "047719655761.dkr.ecr.eu-central-1.amazonaws.com"
-        STAGING_IP = "52.59.231.94"
-        PROD_IP = "54.93.247.225"
+        STAGING_IP = "35.156.214.26"
+        PROD_IP = "3.70.218.52"
     }
 
     stages {
