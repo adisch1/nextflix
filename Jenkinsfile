@@ -20,10 +20,13 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh """
-                docker build -t $IMAGE_NAME .
-                docker tag $IMAGE_NAME:latest $ECR_URL/$IMAGE_NAME:latest
-                """
+                // Inject TMDB API Key from Jenkins credentials
+                withCredentials([string(credentialsId: 'TMBD_ApiKey', variable: 'API_KEY')]) {
+                    sh """
+                    docker build --build-arg TMDB_API_KEY=$API_KEY -t $IMAGE_NAME .
+                    docker tag $IMAGE_NAME:latest $ECR_URL/$IMAGE_NAME:latest
+                    """
+                }
             }
         }
 
