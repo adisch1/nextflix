@@ -1,5 +1,4 @@
-# Use official Node.js Alpine image
-FROM node:18.0.0-alpine
+FROM node:18-bullseye
 
 # Set working directory inside container
 WORKDIR /usr/src/app
