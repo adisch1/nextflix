@@ -1,23 +1,21 @@
+# Use official Node.js 18 Debian-based image
 FROM node:18
 
-# Install dependencies for building native modules
-RUN apk add --no-cache python3 make g++
-
-RUN mkdir -p /usr/src/app
+# Set working directory
 WORKDIR /usr/src/app
 
+# Copy only package files first (cache npm install)
 COPY package*.json ./
-RUN npm install
 
+# Install dependencies
+# npm ci is faster and reliable for CI
+RUN npm ci --legacy-peer-deps
+
+# Copy all app files
 COPY . .
 
-ENV NODE_OPTIONS=--openssl-legacy-provider
-
-ARG API_KEY
-ENV TMDB_KEY=${API_KEY}
-
-RUN npm run build
-
+# Expose default port (adjust if needed)
 EXPOSE 3000
 
+# Default command
 CMD ["npm", "start"]
