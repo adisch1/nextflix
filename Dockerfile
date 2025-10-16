@@ -1,10 +1,10 @@
-# Use official Node image
+# Use official Node.js Alpine image
 FROM node:18.0.0-alpine
 
-# Set working directory
+# Set working directory inside container
 WORKDIR /usr/src/app
 
-# Copy only package.json
+# Copy package.json only to leverage Docker cache
 COPY package.json ./
 
 # Install dependencies
@@ -13,15 +13,15 @@ RUN npm install --legacy-peer-deps
 # Copy the rest of the application
 COPY . .
 
-# Accept TMDB API key as build argument and set environment variable
+# Accept TMDB API key from build argument and set as environment variable
 ARG TMDB_API_KEY
 ENV TMDB_KEY=$TMDB_API_KEY
 
-# Build the Next.js app
+# Build the Next.js application
 RUN npm run build
 
-# Expose port
+# Expose the port the app will run on
 EXPOSE 3000
 
-# Start the app
+# Command to start the app
 CMD ["npm", "start"]
