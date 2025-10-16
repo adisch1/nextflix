@@ -1,21 +1,30 @@
-# Use official Node.js 18 Debian-based image
-FROM node:18
+# Use official Node Alpine image
+FROM node:18.0.0-alpine
 
 # Set working directory
 WORKDIR /usr/src/app
 
-# Copy only package files first (cache npm install)
-COPY package*.json ./
+# Copy only package files first (for caching)
+COPY package.json package-lock.json ./
 
 # Install dependencies
-# npm ci is faster and reliable for CI
 RUN npm ci --legacy-peer-deps
 
-# Copy all app files
+# Copy the rest of the app
 COPY . .
 
-# Expose default port (adjust if needed)
+# Set Node options for legacy OpenSSL
+ENV NODE_OPTIONS=--openssl-legacy-provider
+
+# API key from build argument
+ARG API_KEY
+ENV TMDB_KEY=${API_KEY}
+
+# Build the app
+RUN npm run build
+
+# Expose port
 EXPOSE 3000
 
-# Default command
+# Start the app
 CMD ["npm", "start"]
