@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub') 
         DOCKERHUB_USER = 'adischi123'
         IMAGE_NAME = 'nextflix'
-
+        
         STAGING_HOST = '52.91.30.201'       
         PROD_HOST    = '34.224.165.248'         
         SSH_USER     = 'ubuntu'               
@@ -26,7 +26,8 @@ pipeline {
                     env.IMAGE_TAG = "${DOCKERHUB_USER}/${IMAGE_NAME}:${commitHash}"
                     sh """
                     echo "Building Docker image ${IMAGE_TAG}"
-                    docker build -t ${IMAGE_TAG} .
+                    docker pull ${DOCKERHUB_USER}/${IMAGE_NAME}:latest || true
+                    docker build --cache-from ${DOCKERHUB_USER}/${IMAGE_NAME}:latest -t ${IMAGE_TAG} .
                     docker tag ${IMAGE_TAG} ${DOCKERHUB_USER}/${IMAGE_NAME}:latest
                     """
                 }
@@ -67,7 +68,7 @@ pipeline {
         stage('Deploy to Production') {
             when {
                 branch 'main'
-                expression { return currentBuild.changeSets.size() == 0 } // deploy only on merge
+                expression { return currentBuild.changeSets.size() == 0 } // only deploy on merge
             }
             steps {
                 script {
@@ -89,7 +90,7 @@ pipeline {
             echo "✅ CI/CD pipeline completed successfully!"
         }
         failure {
-            echo "❌ Pipeline failed. Check the logs above."
+            echo "❌ Pipeline failed. Check logs above."
         }
     }
 }
