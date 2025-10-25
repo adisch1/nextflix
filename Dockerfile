@@ -1,19 +1,19 @@
-# Base image
-FROM node:18-bullseye
+# Use slim Node image to reduce size
+FROM node:18-slim
 
 # Set working directory
 WORKDIR /app
 
-# Copy package files first for caching dependencies
+# Copy only package files first to leverage caching
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install --legacy-peer-deps
+# Install dependencies with offline preference
+RUN npm ci --legacy-peer-deps --prefer-offline
 
-# Copy the rest of the app
+# Copy rest of the app
 COPY . .
 
-# Expose the port the app will run on
+# Expose app port
 EXPOSE 3000
 
 # Start the app
